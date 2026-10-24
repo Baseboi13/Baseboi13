@@ -1,0 +1,26 @@
+# Creating this service incurs hosting and persistent-disk charges.
+# Review Render's current prices before confirming the Blueprint deployment.
+services:
+  - type: web
+    name: how2
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.lock
+    startCommand: bash scripts/start.sh
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    disk:
+      name: how2-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: HOW2_STATE_DIR
+        value: /var/data/how2
+      - key: HOW2_HTTPS
+        value: "1"
+      - key: HOW2_PROXY_HOPS
+        value: "1"
+      - key: HOW2_SECRET_KEY
+        generateValue: true
